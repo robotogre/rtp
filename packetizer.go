@@ -1,6 +1,7 @@
 package rtp
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -51,11 +52,14 @@ func (p *packetizer) EnableAbsSendTime(value int) {
 // Packetize packetizes the payload of an RTP packet and returns one or more RTP packets
 func (p *packetizer) Packetize(payload []byte, samples uint32) []*Packet {
 	// Guard against an empty payload
+	fmt.Printf("Packetizer-Packetize() len(payload): %d\n", len(payload))
 	if len(payload) == 0 {
+		fmt.Printf("Packetizer-Packetize() empty payload, returning!!\n")
 		return nil
 	}
 
 	payloads := p.Payloader.Payload(p.MTU-12, payload)
+	fmt.Printf("Packetizer-Packetize() len(payloads): %d\n", len(payloads))
 	packets := make([]*Packet, len(payloads))
 
 	for i, pp := range payloads {

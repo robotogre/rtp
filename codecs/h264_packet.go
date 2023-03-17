@@ -70,6 +70,7 @@ func emitNalus(nals []byte, emit func([]byte)) {
 
 // Payload fragments a H264 packet across one or more byte arrays
 func (p *H264Payloader) Payload(mtu uint16, payload []byte) [][]byte {
+	fmt.Printf("pion.rtp.codec.H264Payloader-Payload()\n")
 	var payloads [][]byte
 	if len(payload) == 0 {
 		return payloads
@@ -84,7 +85,10 @@ func (p *H264Payloader) Payload(mtu uint16, payload []byte) [][]byte {
 		naluRefIdc := nalu[0] & naluRefIdcBitmask
 
 		switch {
-		case naluType == audNALUType || naluType == fillerNALUType:
+		case naluType == audNALUType:
+			fmt.Printf("pion.rtp.codec.H264Payloader-Payload()AUD  NAL type found, NOT returning!\n")
+		case naluType == fillerNALUType:
+			fmt.Printf("pion.rtp.codec.H264Payloader-Payload()Filler NAL type found\n")
 			return
 		case naluType == spsNALUType:
 			p.spsNalu = nalu
